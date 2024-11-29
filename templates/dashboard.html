@@ -1,0 +1,77 @@
+{% extends 'layout_dash.html' %}
+
+{% block title %}
+  Dashboard
+{% endblock %}
+
+{% block dash %}
+  active
+{% endblock %}
+
+{% block body %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <div class="content">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card card-chart">
+          <div class="card-header">
+            <h5 class="card-category">Temperature</h5>
+            <h3 class="card-title" id="temp"></h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card card-chart">
+          <div class="card-header">
+            <h5 class="card-category">Humidity</h5>
+            <h3 class="card-title" id="hum"></h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card card-chart">
+          <div class="card-header">
+            <h5 class="card-category">time</h5>
+            <h3 class="card-title" id="time"></h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="title">Dipsenser Food</h5>
+          </div>
+          <div class="card-body">
+            <button id="runJobButton" class="btn btn-fill btn-primary">Dispenser</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    socket.emit('start_background_task')
+    
+    var temp_div = document.getElementById('temp');
+    var hum_div = document.getElementById('hum');
+    var time_div = document.getElementById('time');
+    
+    socket.on('show_data', function (data) {
+      var time = data.time;
+      var temperature = data.temperature;
+      var humedad = data.humidity;
+    
+      temp_div.innerHTML = temperature;
+      hum_div.innerHTML = humedad;
+      time_div.innerHTML = time;
+    })
+    
+    var runJobButton = document.getElementById('runJobButton');
+    
+    runJobButton.addEventListener('click', function () {
+      socket.emit('run_job');
+    })
+  </script>
+{% endblock %}
